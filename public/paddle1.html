@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Paddle 1</title>
+  <style>
+    #game-canvas {
+      width: 600px;
+      height: 400px;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <h1>Paddle 1</h1>
+  <p>Puntaje:</p>
+  <p>Jugador 1: <span id="player1-score">0</span></p>
+  <p>Jugador 2: <span id="player2-score">0</span></p>
+  <canvas id="game-canvas"></canvas>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const canvas = document.getElementById('game-canvas');
+    const context = canvas.getContext('2d');
+    const paddle2Position = document.getElementById('paddle2-position');
+
+    canvas.width = 600;
+    canvas.height = 400;
+
+    socket.on('move', (data) => {
+      // Limpiar el lienzo
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    
+      // Dibujar la paleta del jugador 1 (paddle1)
+      context.fillRect(10, data.paddles.paddle1.y, 10, 80);
+    
+      // Dibujar la paleta del jugador 2 (paddle2)
+      context.fillRect(580, data.paddles.paddle2.y, 10, 80);
+    
+      // Dibujar la pelota
+      context.beginPath();
+      context.arc(data.ball.x, data.ball.y, 10, 0, 2 * Math.PI);
+      context.fill();
+
+      document.getElementById('player1-score').textContent = data.score.player1;
+      document.getElementById('player2-score').textContent = data.score.player2;
+    });
+    
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowUp') {
+        socket.emit('move', { direction: 'up', player: 'paddle1' });
+      } else if (event.key === 'ArrowDown') {
+        socket.emit('move', { direction: 'down', player: 'paddle1' });
+      }
+    });
+  </script>
+</body>
+</html>
