@@ -69,6 +69,7 @@ function updateBall() {
     ball.y < paddles.paddle1.y + paddleHeight
   ) {
     ball.speedX = -ball.speedX;
+    ball.speedX *= 1.1;
   } else if (
     ball.x > 570 &&
     ball.x + ballSize < 580 + paddleWidth &&
@@ -76,6 +77,7 @@ function updateBall() {
     ball.y < paddles.paddle2.y + paddleHeight
   ) {
     ball.speedX = -ball.speedX;
+    ball.speedX *= 1.1;
   }
 
   // Colisión con las paredes superior e inferior
